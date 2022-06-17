@@ -14,6 +14,9 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.av3.databinding.FragmentSecondBinding;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
 
@@ -35,6 +38,8 @@ public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;
     private WeatherDAO dao;
+    private TextInputEditText cityInput;
+    private View myView;
 
     @Override
     public View onCreateView(
@@ -50,10 +55,13 @@ public class SecondFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        cityInput = (TextInputEditText)view.findViewById(R.id.city_input);
+
+        myView = view;
+
         binding.buttonSecond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText cityInput = view.findViewById(R.id.city_input);
 
                 String city = cityInput.getText().toString();
 
@@ -76,12 +84,14 @@ public class SecondFragment extends Fragment {
 
             for (WeatherCache c : cache) {
                 Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm").parse(c.Localtime);
-                Calendar calendar = Calendar.getInstance();
+                Date now = new Date(System.currentTimeMillis());
 
-                long nowTime = calendar.getTime().getTime();
+                long nowTime = now.getTime();
                 long cacheTime = date.getTime();
 
-                if (nowTime - cacheTime <= 24*60) {
+                long differenceInTime = Math.abs(nowTime - cacheTime);
+
+                if ((differenceInTime / (1000 * 60)) % 60 <= 60) {
                     freshCache = c;
                     break;
                 }
@@ -104,10 +114,11 @@ public class SecondFragment extends Fragment {
                 WeatherCache fresh = readDatabase(city);
 
                 if (fresh != null) {
-                    new AlertDialog.Builder(binding.getRoot().getContext())
-                            .setTitle("Database")
-                            .setMessage("Os dados no banco estão novinhos!")
-                            .show();
+                    if (myView != null) {
+                        Snackbar.make(myView, "Achamos os dados no cache que beleza!", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+
                     return fresh;
                 }
 
@@ -119,10 +130,11 @@ public class SecondFragment extends Fragment {
                     WeatherCache c = readDatabase(city);
                     dao.SetActive(c.Id);
 
-                    new AlertDialog.Builder(binding.getRoot().getContext())
-                            .setTitle("API")
-                            .setMessage("Opa! Não achamos um cache dos dados ou estão antigos, pegamos da API :)")
-                            .show();
+                    if (myView != null) {
+                        Snackbar.make(myView, "Opa! Pegamos da API :)", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+
                     return c;
                 }
 
@@ -147,10 +159,10 @@ public class SecondFragment extends Fragment {
                         .navigate(R.id.action_SecondFragment_to_FirstFragment);
             } else {
 
-                new AlertDialog.Builder(binding.getRoot().getContext())
-                        .setTitle("Erro!")
-                        .setMessage("A cidade solicitada não foi encontrado!")
-                        .show();
+                if (myView != null) {
+                    Snackbar.make(myView, "A cidade solicitada não foi encontrado!", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         }
     }

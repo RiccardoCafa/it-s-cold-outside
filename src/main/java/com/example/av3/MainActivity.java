@@ -1,11 +1,15 @@
 package com.example.av3;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.AttributeSet;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -47,13 +51,29 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
-        CityText = this.findViewById(R.id.city_text);
-        TempText = this.findViewById(R.id.temp_text);
-        PrecipText = this.findViewById(R.id.precip_text);
-        WindText = this.findViewById(R.id.vento_text);
-        LatText = this.findViewById(R.id.lat_text);
-        LonText = this.findViewById(R.id.lon_text);
+        CityText = (TextView)this.findViewById(R.id.city_text);
+        TempText = (TextView)this.findViewById(R.id.temp_text);
+        PrecipText = (TextView)this.findViewById(R.id.precip_text);
+        WindText = (TextView)this.findViewById(R.id.vento_text);
+        LatText = (TextView)this.findViewById(R.id.lat_text);
+        LonText = (TextView)this.findViewById(R.id.lon_text);
 
+        setActiveCache();
+
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "todo reload info from API or Database", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+    }
+
+    private void setActiveCache() {
         int id = dao.getActiveWeather();
 
         if (id != -1) {
@@ -72,18 +92,18 @@ public class MainActivity extends AppCompatActivity {
             LatText.setText("--" + "°");
             LonText.setText("--" + "°");
         }
+    }
+    
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        setActiveCache();
+    }
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "todo reload info from API or Database", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setActiveCache();
     }
 
     @Override

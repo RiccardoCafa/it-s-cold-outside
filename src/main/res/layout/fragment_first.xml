@@ -36,7 +36,7 @@
             android:layout_width="412dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="30°C"
+            android:text="-- °C"
             android:textAlignment="center"
             android:textSize="60sp" />
 
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:gravity="center"
-            android:text="Salvador"
+            android:text="--"
             android:textAlignment="center"
             android:textSize="20sp" />
 
@@ -59,7 +59,7 @@
                 android:layout_width="207dp"
                 android:layout_height="29dp"
                 android:gravity="center"
-                android:text="lat. 400"
+                android:text="-- °"
                 android:textAlignment="center"
                 android:textSize="12sp" />
 
@@ -68,7 +68,7 @@
                 android:layout_width="203dp"
                 android:layout_height="29dp"
                 android:gravity="center"
-                android:text="lat. 400"
+                android:text="-- °"
                 android:textAlignment="center"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -83,7 +83,7 @@
                 android:layout_width="208dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="vento 30 kph"
+                android:text="-- kph"
                 android:textAlignment="center"
                 android:textSize="12sp" />
 
@@ -92,7 +92,7 @@
                 android:layout_width="203dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="precip 300 mm"
+                android:text="-- mm"
                 android:textAlignment="center"
                 android:textSize="12sp" />
         </LinearLayout>
