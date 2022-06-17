@@ -11,4 +11,5 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="Reload">Reload</string>
     <string name="Cadastrar">Cadastra Cidade</string>
+    <string name="ProcurarCidade">Procurar Cidade</string>
 </resources>

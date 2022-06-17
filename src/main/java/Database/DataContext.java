@@ -19,7 +19,7 @@ public class DataContext extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS WeatherCache (" +
                 "Id INTEGER NOT NULL PRIMARY KEY, " +
-                "Name VARCHAR(8) NOT NULL PRIMARY KEY, " +
+                "Name VARCHAR(8) NOT NULL, " +
                 "Region VARCHAR(5) NOT NULL, " +
                 "Country VARCHAR(6) NOT NULL, " +
                 "Latitude NUMERIC(6,2) NOT NULL, " +
@@ -32,6 +32,8 @@ public class DataContext extends SQLiteOpenHelper {
                 "PrecipMm NUMERIC(3,1) NOT NULL, " +
                 "PrecipIn BIT  NOT NULL" +
                 ");");
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS ActiveWeather(WeatherId INTEGER NOT NULL);");
     }
 
     @Override

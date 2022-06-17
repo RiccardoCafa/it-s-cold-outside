@@ -1,6 +1,5 @@
 package com.example.av3;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -18,37 +17,70 @@ import com.example.av3.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
-import org.json.JSONException;
-
-import Controllers.WeatherController;
-import Controllers.WeatherException;
-import Models.Weather;
+import Database.WeatherDAO;
+import Entities.WeatherCache;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
+    private WeatherDAO dao;
+
+    private TextView CityText;
+    private TextView TempText;
+    private TextView PrecipText;
+    private TextView WindText;
+    private TextView LatText;
+    private TextView LonText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        dao = new WeatherDAO(this);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
 
+        CityText = this.findViewById(R.id.city_text);
+        TempText = this.findViewById(R.id.temp_text);
+        PrecipText = this.findViewById(R.id.precip_text);
+        WindText = this.findViewById(R.id.vento_text);
+        LatText = this.findViewById(R.id.lat_text);
+        LonText = this.findViewById(R.id.lon_text);
+
+        int id = dao.getActiveWeather();
+
+        if (id != -1) {
+            WeatherCache cache = dao.GetById(id);
+            CityText.setText(cache.Name);
+            TempText.setText(cache.TempC + " °C");
+            PrecipText.setText(cache.PrecipMm + " mm");
+            WindText.setText(cache.WindMph + " Mph");
+            LatText.setText(cache.Latitude + "°");
+            LonText.setText(cache.Longitude + "°");
+        } else {
+            CityText.setText("--");
+            TempText.setText("--" + " °C");
+            PrecipText.setText("--" + " mm");
+            WindText.setText("--" + " Mph");
+            LatText.setText("--" + "°");
+            LonText.setText("--" + "°");
+        }
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        new WeatherTask().execute("Salvador");
-
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "todo reload info from API or Database", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -83,32 +115,4 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    private class WeatherTask extends AsyncTask<String, Void, Weather> {
-        @Override
-        protected Weather doInBackground(String... strings) {
-            try {
-                Weather weather = WeatherController.getAsObject("Salvador");
-                /*System.out.println(weather.location.name);
-                System.out.println(weather.location.region);
-                System.out.println(weather.location.country);
-                System.out.println(weather.location.lat);
-                System.out.println(weather.location.lon);
-                System.out.println(weather.location.localtime);
-                System.out.println(weather.current.wind_kph);
-                System.out.println(weather.current.precip_mm);
-                System.out.println(weather.current.temp_c);*/
-                return weather;
-            } catch (WeatherException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Weather weather) {
-            super.onPostExecute(weather);
-        }
-    }
 }
