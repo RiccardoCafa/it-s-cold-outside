@@ -114,6 +114,7 @@ public class SecondFragment extends Fragment {
                 WeatherCache fresh = readDatabase(city);
 
                 if (fresh != null) {
+                    dao.SetActive(fresh.Id);
                     if (myView != null) {
                         Snackbar.make(myView, "Achamos os dados no cache que beleza!", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
@@ -127,7 +128,10 @@ public class SecondFragment extends Fragment {
                 long rows = dao.Create(weather);
 
                 if (rows >= 1) {
-                    WeatherCache c = readDatabase(city);
+                    WeatherCache c = readDatabase(weather.location.name);
+                    if(c == null){
+
+                    }
                     dao.SetActive(c.Id);
 
                     if (myView != null) {

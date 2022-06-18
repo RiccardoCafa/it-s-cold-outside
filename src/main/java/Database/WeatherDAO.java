@@ -44,7 +44,7 @@ public class WeatherDAO {
     public long Create(Weather weather){
         ContentValues values = new ContentValues();
 
-        values.put("Name", weather.location.name);
+        values.put("Name", weather.location.name.toLowerCase());
         values.put("Region", weather.location.region);
         values.put("Country", weather.location.country);
         values.put("Latitude", weather.location.lat);
@@ -63,7 +63,7 @@ public class WeatherDAO {
     public ArrayList<WeatherCache> Read(String cidade){
         ArrayList<WeatherCache> weatherCaches =  new ArrayList<>();
 
-        Cursor cursor = banco.query("WeatherCache",  parameters, "Name=?", new String[] { cidade }, null, null, null);
+        Cursor cursor = banco.query("WeatherCache",  parameters, "Name=?", new String[] { cidade.toLowerCase() }, null, null, null);
 
         while(cursor.moveToNext()){
             WeatherCache c = getWeatherCacheWithCursor(cursor);
@@ -111,7 +111,6 @@ public class WeatherDAO {
                 new String[] {
                         "WeatherId"
                 }, null, null, null, null, null);
-
         while(cursor.moveToNext()){
             return cursor.getInt(0);
         }
@@ -121,7 +120,7 @@ public class WeatherDAO {
 
     public void SetActive(int Id) {
         banco.delete("ActiveWeather", "1=1", new String[] {});
-
+        System.out.println(Id);
         ContentValues values = new ContentValues();
 
         values.put("WeatherId", Id);

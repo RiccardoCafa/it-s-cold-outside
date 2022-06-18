@@ -73,6 +73,7 @@ public class FirstFragment extends Fragment {
             WindText.setText(cache.WindMph + " Mph");
             LatText.setText(cache.Latitude + "°");
             LonText.setText(cache.Longitude + "°");
+            System.out.println(cache.Name);
         } else {
             CityText.setText("--");
             TempText.setText("-- °C");
@@ -81,6 +82,7 @@ public class FirstFragment extends Fragment {
             LatText.setText("-- °");
             LonText.setText("-- °");
         }
+
     }
 
     @Override

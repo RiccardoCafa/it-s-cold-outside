@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 public class DataContext extends SQLiteOpenHelper {
 
-    private static final String name="banco.db";
+    private static final String name="banco1.db";
     private static final int version=1;
 
     public DataContext(Context context ) {
